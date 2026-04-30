@@ -3,9 +3,11 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import FeaturedDishes from './components/FeaturedDishes';
 import Packages from './components/Packages';
+import VideoTestimonials from './components/VideoTestimonials';
 import OrderForm from './components/OrderForm';
 import About from './components/About';
 import Contact from './components/Contact';
+import InstagramFeed from './components/InstagramFeed';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
 import { ChatBot } from './components/ChatBot';
@@ -17,9 +19,11 @@ function LandingPage() {
       <Hero />
       <FeaturedDishes />
       <Packages />
+      <VideoTestimonials />
       <OrderForm />
       <About />
       <Contact />
+      <InstagramFeed />
       <Footer />
       <ChatBot />
     </div>
