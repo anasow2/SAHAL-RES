@@ -5,6 +5,7 @@ export default function OrderForm() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submittedOrder, setSubmittedOrder] = useState<any>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -27,38 +28,123 @@ export default function OrderForm() {
   const handleNext = () => setStep(2);
   const handlePrev = () => setStep(1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        const orderData = await response.json();
+        setSubmittedOrder(orderData);
+        setIsSuccess(true);
+        // Reset form for next time optionally
+        setFormData({
+          eventType: '',
+          date: '',
+          guests: '',
+          location: '',
+          package: '',
+          dietary: '',
+          name: '',
+          email: '',
+          phone: '',
+          requests: '',
+        });
+      } else {
+        alert("Failed to submit request. Please try again or contact us directly.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("An error occurred. Please try again later.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
+    }
   };
 
-  if (isSuccess) {
+  if (isSuccess && submittedOrder) {
     return (
       <section id="order" className="py-24 bg-cream">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white p-12 rounded-3xl shadow-xl border border-ivory"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-ivory"
           >
-            <div className="w-20 h-20 bg-saffron rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-              </svg>
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="font-serif text-3xl font-bold text-gray-900 mb-2">Request Received!</h3>
+              <p className="text-gray-500">Thank you, {submittedOrder.name}. Your catering request has been securely submitted.</p>
             </div>
-            <h3 className="font-serif text-4xl font-bold text-burgundy mb-4">Request Sent Successfully!</h3>
-            <p className="text-gray-600 mb-8">Thank you, {formData.name}. We have received your catering request and will be in touch within 24 hours to confirm details.</p>
-            <button
-              onClick={() => { setIsSuccess(false); setStep(1); }}
-              className="bg-burgundy text-cream px-8 py-3 rounded-full font-semibold hover:bg-terracotta transition-colors"
-            >
-              Submit Another Request
-            </button>
+
+            <div className="bg-gray-50 rounded-2xl p-6 md:p-8 mb-8 border border-gray-100">
+              <div className="flex border-b border-gray-200 pb-4 mb-4 justify-between items-center">
+                <div>
+                  <h4 className="font-bold text-gray-900">Order Receipt</h4>
+                  <p className="text-sm text-gray-500">ID: #{submittedOrder.id}</p>
+                </div>
+                <div className="text-right">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200">
+                    Status: Pending
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                <div>
+                  <span className="text-gray-500 block mb-1">Event Type</span>
+                  <span className="font-medium text-gray-900 capitalize">{submittedOrder.eventType}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block mb-1">Event Date</span>
+                  <span className="font-medium text-gray-900">{submittedOrder.date}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block mb-1">Location</span>
+                  <span className="font-medium text-gray-900">{submittedOrder.location}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block mb-1">Guest Count</span>
+                  <span className="font-medium text-gray-900">{submittedOrder.guests} guests</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block mb-1">Package Selected</span>
+                  <span className="font-medium text-gray-900 capitalize">{submittedOrder.package}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block mb-1">Contact Email</span>
+                  <span className="font-medium text-gray-900">{submittedOrder.email}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-gray-600 mb-6 text-sm">
+                We will review your request and get back to you within 24 hours to confirm the details.
+                You can save this receipt for your records.
+              </p>
+              <button
+                onClick={() => { window.print(); }}
+                className="bg-gray-100 text-gray-700 hover:bg-gray-200 px-6 py-2.5 rounded-lg font-medium transition-colors mr-3"
+              >
+                Print Receipt
+              </button>
+              <button
+                onClick={() => { setIsSuccess(false); setStep(1); setSubmittedOrder(null); }}
+                className="bg-burgundy text-cream hover:bg-terracotta px-6 py-2.5 rounded-lg font-medium transition-colors"
+              >
+                New Request
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>

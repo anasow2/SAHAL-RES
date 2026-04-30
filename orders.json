@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1738222800000",
+    "createdAt": "2026-04-30T10:00:00.000Z",
+    "status": "pending",
+    "eventType": "wedding",
+    "date": "2026-06-15",
+    "guests": "150",
+    "location": "Oslo City Hall",
+    "package": "grand",
+    "name": "Hussein Ali",
+    "email": "hussein.ali@example.com",
+    "phone": "+47 41234567",
+    "requests": "We need extra Halwa, and 2 tables for people with nut allergies."
+  },
+  {
+    "id": "1738222800001",
+    "createdAt": "2026-04-29T14:30:00.000Z",
+    "status": "confirmed",
+    "eventType": "family",
+    "date": "2026-05-01",
+    "guests": "40",
+    "location": "Grünerløkka Community Center",
+    "package": "celebration",
+    "name": "Fadumo Jama",
+    "email": "fadumo99@example.com",
+    "phone": "+47 98765432",
+    "requests": "Please make sure the Suqaar is not too spicy."
+  }
+]

@@ -1,6 +1,37 @@
 import { MapPin, Phone, Mail, Instagram, Facebook } from 'lucide-react';
+import React, { useState } from 'react';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,18 +86,48 @@ export default function Contact() {
 
             <div className="bg-ivory p-12 md:p-16 flex flex-col justify-center border-l border-cream/10 z-10">
               <h3 className="font-serif text-2xl font-bold text-burgundy mb-6">Send us a message</h3>
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              {submitSuccess ? (
+                <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                  Mahadsanid! Fariintaada waan gudbinay.
+                </div>
+              ) : null}
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
-                  <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800" />
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="Your Name (Magacaaga)" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800" 
+                  />
                 </div>
                 <div>
-                  <input type="email" placeholder="Your Email" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800" />
+                  <input 
+                    type="email" 
+                    required
+                    placeholder="Your Email (Emailkaaga)" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800" 
+                  />
                 </div>
                 <div>
-                  <textarea rows={4} placeholder="How can we help?" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800"></textarea>
+                  <textarea 
+                    rows={4} 
+                    required
+                    placeholder="How can we help? (Fariintaada...)" 
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-terracotta focus:border-transparent outline-none bg-white font-sans text-gray-800"
+                  ></textarea>
                 </div>
-                <button type="submit" className="w-full bg-terracotta text-cream py-4 rounded-lg font-bold hover:bg-burgundy transition-colors shadow-md">
-                  Send Message
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-terracotta text-cream py-4 rounded-lg font-bold hover:bg-burgundy transition-colors shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Dirayaa...' : 'Dir Fariinta'}
                 </button>
               </form>
               
