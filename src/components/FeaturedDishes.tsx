@@ -41,7 +41,7 @@ const dishes = [
     somaliName: 'Kac-Kac',
     englishName: 'Sweet Fried Dough',
     description: 'Crispy, diamond-shaped pastries lightly sweetened and spiced with cardamom. A perfect pairing with Somali tea.',
-    image: 'https://images.unsplash.com/photo-1628198535032-491c099b2eb8?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?auto=format&fit=crop&q=80',
   },
   {
     somaliName: 'Basbousa',

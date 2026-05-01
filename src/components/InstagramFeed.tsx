@@ -10,7 +10,7 @@ const instagramPosts = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1549488344-c1044439cba9?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&q=80',
     alt: 'Bariis Iskukaris presentation',
     likes: 245,
     comments: 28
